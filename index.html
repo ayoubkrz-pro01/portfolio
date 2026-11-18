@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ayoub — Portfolio</title>
+<meta name="description" content="Portfolio d'Ayoub : deux petits projets web en HTML, CSS et JavaScript.">
+<style>
+  :root { --bg:#070a18; --card:#101530; --text:#e9ecf8; --muted:#9aa3c7; --accent:#ffb703; --line:#1f2547; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { max-width:880px; margin:0 auto; padding:0 20px 60px; }
+  header { padding:72px 0 32px; }
+  h1 { font-size:2.4rem; margin:0 0 6px; }
+  .role { color:var(--accent); font-weight:600; margin:0 0 18px; }
+  h2 { font-size:.9rem; letter-spacing:.25em; text-transform:uppercase; color:var(--muted); margin:36px 0 20px; }
+  .projects { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; }
+  .project { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; display:flex; flex-direction:column; }
+  .project h3 { margin:0 0 6px; font-size:1.4rem; }
+  .project p { margin:0 0 14px; color:var(--muted); }
+  .tags { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; padding:0; list-style:none; }
+  .tags li { border:1px solid var(--line); border-radius:999px; padding:2px 11px; font-size:.82rem; }
+  .links { margin-top:auto; display:flex; gap:10px; flex-wrap:wrap; }
+  a.btn { padding:8px 16px; border-radius:8px; background:var(--accent); color:#111; font-weight:600; text-decoration:none; }
+  a.btn.ghost { background:transparent; color:var(--text); border:1px solid var(--line); }
+  footer { margin-top:48px; padding-top:24px; border-top:1px solid var(--line); color:var(--muted); font-size:.95rem; }
+  footer a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Ayoub</h1>
+    <p class="role">Étudiant développeur · à la recherche d'un stage</p>
+    <p>Deux petits projets web, écrits en HTML, CSS et JavaScript sans bibliothèque. Chacun s'ouvre directement dans le navigateur.</p>
+  </header>
+
+  <h2>Projets</h2>
+  <div class="projects">
+    <article class="project">
+      <h3>Générateur de palettes</h3>
+      <p>Génère des palettes de 5 couleurs harmonieuses. On peut verrouiller celles qu'on aime, copier un code en un clic, et relancer le reste avec la barre d'espace.</p>
+      <ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+      <div class="links">
+        <a class="btn" href="palette/">Essayer</a>
+        <a class="btn ghost" href="https://github.com/ayoubkrz-pro01/portfolio/blob/main/palette/index.html">Code</a>
+      </div>
+    </article>
+
+    <article class="project">
+      <h3>Jeu de mémoire</h3>
+      <p>Retrouve les paires de cartes en un minimum de coups. Animation de retournement en CSS, mélange aléatoire et meilleur score gardé dans le navigateur.</p>
+      <ul class="tags"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+      <div class="links">
+        <a class="btn" href="memory/">Jouer</a>
+        <a class="btn ghost" href="https://github.com/ayoubkrz-pro01/portfolio/blob/main/memory/index.html">Code</a>
+      </div>
+    </article>
+  </div>
+
+  <footer>
+    <a href="https://github.com/ayoubkrz-pro01">GitHub</a>
+  </footer>
+</main>
+</body>
+</html>

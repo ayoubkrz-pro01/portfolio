@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jeu de mémoire</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px; font-family: system-ui, sans-serif; background: #0d1226; color: #fff; }
+  h1 { margin: 0 0 8px; }
+  .stats { display: flex; gap: 24px; margin-bottom: 20px; color: #b9c0e0; }
+  button { font: inherit; cursor: pointer; border: 0; border-radius: 8px; padding: 8px 18px; background: #ffb703; color: #111; font-weight: 600; }
+  #board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: min(420px, 100%); margin-top: 20px; }
+  .card { aspect-ratio: 1; perspective: 600px; border: 0; padding: 0; background: none; cursor: pointer; }
+  .inner { position: relative; width: 100%; height: 100%; transition: transform .4s; transform-style: preserve-3d; }
+  .card.open .inner, .card.matched .inner { transform: rotateY(180deg); }
+  .face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; backface-visibility: hidden; font-size: 2.2rem; }
+  .back { background: #1f2a5c; border: 2px solid #34428a; }
+  .front { background: #fff; transform: rotateY(180deg); }
+  .card.matched .front { background: #b7f0c0; }
+  #win { margin-top: 20px; font-size: 1.2rem; min-height: 1.5em; color: #ffb703; }
+</style>
+</head>
+<body>
+<h1>Jeu de mémoire</h1>
+<div class="stats">
+  <span>Coups : <b id="moves">0</b></span>
+  <span>Meilleur score : <b id="best">–</b></span>
+</div>
+<button id="restart">Nouvelle partie</button>
+<div id="board"></div>
+<div id="win"></div>
+
+<script>
+  const SYMBOLS = ["🍎", "🚀", "🎧", "🌵", "🐙", "⚡"];
+  const boardEl = document.getElementById("board");
+  const movesEl = document.getElementById("moves");
+  const bestEl = document.getElementById("best");
+  const winEl = document.getElementById("win");
+
+  let first = null;      // première carte retournée du tour
+  let locked = false;    // empêche de cliquer pendant l'animation
+  let moves = 0;
+  let matches = 0;
+
+  // Mélange de Fisher-Yates : mélange la liste de façon uniforme.
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Le meilleur score est gardé dans le navigateur (localStorage).
+  function loadBest() {
+    try {
+      const b = localStorage.getItem("memory-best");
+      bestEl.textContent = b ? b : "–";
+    } catch (e) {}
+  }
+  function saveBest() {
+    try {
+      const b = Number(localStorage.getItem("memory-best"));
+      if (!b || moves < b) localStorage.setItem("memory-best", moves);
+    } catch (e) {}
+    loadBest();
+  }
+
+  function newGame() {
+    boardEl.innerHTML = "";
+    winEl.textContent = "";
+    first = null; locked = false; moves = 0; matches = 0;
+    movesEl.textContent = 0;
+
+    shuffle([...SYMBOLS, ...SYMBOLS]).forEach(symbol => {
+      const card = document.createElement("button");
+      card.className = "card";
+      card.dataset.symbol = symbol;
+      card.innerHTML = '<div class="inner"><div class="face back"></div><div class="face front">' + symbol + "</div></div>";
+      card.onclick = () => flip(card);
+      boardEl.append(card);
+    });
+  }
+
+  function flip(card) {
+    if (locked || card === first || card.classList.contains("matched")) return;
+    card.classList.add("open");
+
+    if (!first) { first = card; return; }
+
+    moves++;
+    movesEl.textContent = moves;
+
+    if (first.dataset.symbol === card.dataset.symbol) {
+      first.classList.add("matched");
+      card.classList.add("matched");
+      first = null;
+      matches++;
+      if (matches === SYMBOLS.length) {
+        winEl.textContent = "Gagné en " + moves + " coups !";
+        saveBest();
+      }
+    } else {
+      // Paire différente : on laisse voir un instant, puis on retourne les deux.
+      locked = true;
+      setTimeout(() => {
+        first.classList.remove("open");
+        card.classList.remove("open");
+        first = null;
+        locked = false;
+      }, 800);
+    }
+  }
+
+  document.getElementById("restart").onclick = newGame;
+  loadBest();
+  newGame();
+</script>
+</body>
+</html>
